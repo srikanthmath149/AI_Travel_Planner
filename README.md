@@ -23,3 +23,19 @@
 
 ## use this command from your virtual env
 ```C:\Users\Srikanth\AI_Trip_Planner\env\Scripts\activate.bat```
+
+
+
+```https://home.openweathermap.org/```
+
+```https://app.exchangerate-api.com/```
+
+```https://console.groq.com/```
+
+```https://platform.openai.com/```
+
+```https://app.tavily.com/```
+
+```uv pip install -r requirements.txt```
+
+```uv pip list```
