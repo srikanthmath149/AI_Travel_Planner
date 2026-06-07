@@ -3,9 +3,10 @@ from dotenv import load_dotenv
 from typing import Literal, Optional, Any
 from pydantic import BaseModel, Field
 from utils.config_loader import load_config
-from langchain_groq import ChatGroq
 from langchain_openai import ChatOpenAI
-
+from langchain_groq import ChatGroq
+from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_anthropic import ChatAnthropic
 
 class ConfigLoader:
     def __init__(self):
@@ -16,7 +17,7 @@ class ConfigLoader:
         return self.config[key]
 
 class ModelLoader(BaseModel):
-    model_provider: Literal["groq", "openai"] = "groq"
+    model_provider: Literal["groq", "openai", "google", "anthropic"] = "groq"
     config: Optional[ConfigLoader] = Field(default=None, exclude=True)
 
     def model_post_init(self, __context: Any) -> None:
@@ -40,6 +41,16 @@ class ModelLoader(BaseModel):
             print("Loading LLM from OpenAI..............")
             openai_api_key = os.getenv("OPENAI_API_KEY")
             model_name = self.config["llm"]["openai"]["model_name"]
-            llm = ChatOpenAI(model_name="o4-mini", api_key=openai_api_key)
-        
+            llm = ChatOpenAI(model_name=model_name, api_key=openai_api_key)
+        elif self.model_provider == "google":
+            print("Loading LLM from Google..............")
+            gemini_api_key = os.getenv("GEMINI_API_KEY")
+            model_name = self.config["llm"]["google"]["model_name"]
+            llm = ChatGoogleGenerativeAI(model=model_name, api_key=gemini_api_key)
+        elif self.model_provider == "anthropic":
+            print("Loading LLM from Google..............")
+            anthropic_api_key = os.getenv("ANTHROPIC_API_KEY")
+            model_name = self.config["llm"]["anthropic"]["model_name"]
+            llm = ChatAnthropic(model=model_name, api_key=anthropic_api_key)
+    
         return llm
